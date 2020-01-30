@@ -1,0 +1,27 @@
+{
+  "name": "football-data-scraper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "build": "npx tsc src/index"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^25.1.1",
+    "@types/jsdom": "^12.2.4",
+    "@types/node": "^13.5.3",
+    "jest": "^25.1.0",
+    "ts-jest": "^25.1.0",
+    "tslint": "^6.0.0",
+    "typescript": "^3.7.5"
+  },
+  "dependencies": {
+    "jsdom": "^16.0.1",
+    "node-fetch": "^2.6.0"
+  }
+}
