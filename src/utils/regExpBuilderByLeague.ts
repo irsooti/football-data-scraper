@@ -1,16 +1,16 @@
-import { Acronyms } from '../acronyms';
+import { League } from '../models/league';
 
 export default function regExpBuilderByLeague(
   start: string,
   end: string,
   acronyms: string[]
 ): RegExp {
-  let string: string = '';
+  let text = '';
   acronyms.forEach(acronym => {
-    if (string) {
-      string = string + '|';
+    if (text) {
+      text = text + '|';
     }
-    string = string + `${start}${end}/${acronym}.csv$`;
+    text = text + `${start}${end}/${acronym}.csv$`;
   });
-  return new RegExp(string, 'i');
+  return new RegExp(text, 'i');
 }
