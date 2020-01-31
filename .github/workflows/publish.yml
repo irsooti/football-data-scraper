@@ -21,5 +21,6 @@ jobs:
       run: npm install
     - name: Build package
       run: npm run build
-    - run: npm publish
+    - name: Publish package
+      run: npm publish
       if: github.event == 'push'
