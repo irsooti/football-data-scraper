@@ -18,7 +18,13 @@ export default async function(response: Response): Promise<string> {
     file.write(await response.buffer());
     return commonPath + '/' + season + '/' + filename;
   } catch (err) {
-    throw new Error("Can't create the csv!");
+    const seasonSplitted = season.split('');
+    seasonSplitted.splice(2, 0, '-');
+    throw new Error(
+      `Can't create the csv of ${filename} for the season ${seasonSplitted.join(
+        ''
+      )}`
+    );
   } finally {
     file.close();
   }
