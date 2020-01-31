@@ -1,0 +1,25 @@
+name: CI
+
+on: 
+  push:
+    branches:
+    - master
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        node-version: '10.x'
+    - name: Install deps
+      run: npm install
+    - name: Build package
+      run: npm run build
+    - run: npm publish
+      if: github.event == 'push'
