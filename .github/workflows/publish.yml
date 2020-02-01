@@ -1,28 +1,34 @@
 name: CI
 
-on: 
-  push:
-    branches:
-    - master
-  pull_request:
-    branches:
-    - master
+on:
+  release:
+    types: [created]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v2
-      with:
-        node-version: '10.x'
-    - name: Install deps
-      run: npm install
-    - name: Test
-      run: npm run test
-    - name: Build package
-      run: npm run build
-    - name: Publish package
-      run: npm publish
-      if: github.event == 'push'
+      - uses: actions/checkout@v2
+        with:
+          node-version: 12
+      - name: Install deps
+        run: npm install
+      - name: Test
+        run: npm run test
+      - name: Build package
+        run: npm run build
+
+  publish-gpr:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://npm.pkg.github.com/
+          scope: '@irsooti'
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
