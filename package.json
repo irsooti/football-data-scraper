@@ -1,6 +1,6 @@
 {
   "name": "@irsooti/football-data-scraper",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Scrape from the site https://www.football-data.co.uk",
   "main": "build/index.js",
   "scripts": {
