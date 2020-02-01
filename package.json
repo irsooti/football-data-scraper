@@ -1,15 +1,17 @@
 {
   "name": "@irsooti/football-data-scraper",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Scrape from the site https://www.football-data.co.uk",
   "main": "build/index.js",
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watchAll",
-    "build": "node ./node_modules/.bin/tsc"
+    "build": "npm run clean && node ./node_modules/.bin/tsc",
+    "clean": "npx rimraf build"
   },
+  "types": "build/index.d.ts",
   "keywords": [],
-  "author": "",
+  "author": "Daniele Irsuti",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^25.1.1",
@@ -17,6 +19,7 @@
     "@types/node": "^13.5.3",
     "@types/node-fetch": "^2.5.4",
     "jest": "^25.1.0",
+    "rimraf": "^3.0.1",
     "ts-jest": "^25.1.0",
     "tslint": "^6.0.0",
     "typescript": "^3.7.5"

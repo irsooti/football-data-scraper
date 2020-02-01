@@ -8,8 +8,9 @@
     "experimentalDecorators": true,
     "removeComments": false,
     "noImplicitAny": false,
+    "declaration": true,
     "outDir": "build",
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
