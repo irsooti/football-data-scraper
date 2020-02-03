@@ -1,4 +1,9 @@
-import { League, ScraperResponse } from './models';
+import {
+  League,
+  ScraperResponse,
+  LeagueItem,
+  LeagueItemWithContent
+} from './models';
 import * as fs from 'fs';
 import fetch from 'node-fetch';
 import {
@@ -6,6 +11,8 @@ import {
   regExpBuilderByLeague,
   writeCsvToDirectory
 } from './utils';
+import csv from 'csv-parser';
+import { LeagueRecord } from './models';
 
 const SITE_TO_SCRAPE = 'https://www.football-data.co.uk';
 
@@ -19,7 +26,7 @@ export async function scrapeBySeason(
   start: number,
   end: number,
   league: League
-): Promise<string[]> {
+): Promise<LeagueItem[]> {
   const last2Start = start.toString().substr(2, 2);
   const last2End = end.toString().substr(2, 2);
 
@@ -43,7 +50,14 @@ export async function scrapeBySeason(
     .filter(v => {
       return regExp.test(v.getAttribute('href'));
     })
-    .map(href => SITE_TO_SCRAPE + '/' + href.getAttribute('href'));
+    .map(href => ({
+      url: SITE_TO_SCRAPE + '/' + href.getAttribute('href'),
+      leagueName: href.text,
+      id: href.href
+        .split('/')
+        .reverse()[0]
+        .replace('.csv', '')
+    }));
 }
 
 /**
@@ -56,16 +70,18 @@ export async function scrapeBySeasonAndDownload(
   start: number,
   end: number,
   acronyms: League
-): Promise<ScraperResponse> {
-  const scraperResponse: ScraperResponse = {
+): Promise<ScraperResponse<LeagueItem[]>> {
+  const scraperResponse: ScraperResponse<LeagueItem[]> = {
     data: [],
     error: undefined
   };
 
   const scrapedUrls = await scrapeBySeason(start, end, acronyms);
   try {
-    const scrapedRequests = scrapedUrls.map((url: string) =>
-      fetch(url).then(writeCsvToDirectory)
+    const scrapedRequests = scrapedUrls.map((item: LeagueItem) =>
+      fetch(item.url).then(response =>
+        writeCsvToDirectory(response, item.id, item.leagueName)
+      )
     );
 
     const downloadedUrl = await Promise.all(scrapedRequests);
@@ -76,4 +92,38 @@ export async function scrapeBySeasonAndDownload(
   }
 
   return scraperResponse;
+}
+
+export async function getBySeason(
+  start: number,
+  end: number,
+  acronyms: League
+) {
+  const result = await scrapeBySeasonAndDownload(start, end, acronyms);
+  const response: ScraperResponse<LeagueItemWithContent[]> = {
+    data: [],
+    error: undefined
+  };
+
+  return result.data.map((r: LeagueItem) => {
+    return {
+      getContent: (): Promise<LeagueRecord[]> =>
+        new Promise((resolve, reject) => {
+          const content = [];
+          fs.createReadStream(r.url)
+            .pipe(csv())
+            .on('data', data => {
+              content.push(data);
+            })
+            .on('end', () => {
+              resolve(content);
+            })
+            .on('error', reject);
+        }),
+      id: r.id,
+      leagueName: r.leagueName
+    };
+  });
+
+  // return response;
 }
