@@ -1,8 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import fetch, { Response } from 'node-fetch';
+import { LeagueItem } from '../models';
 
-export default async function(response: Response): Promise<string> {
+export default async function(
+  response: Response,
+  id: string,
+  name: string
+): Promise<LeagueItem> {
   const [filename, season] = response.url.split('/').reverse();
   const commonPath = path.resolve('.') + '/csv';
 
@@ -16,7 +21,11 @@ export default async function(response: Response): Promise<string> {
 
   try {
     file.write(await response.buffer());
-    return commonPath + '/' + season + '/' + filename;
+    return {
+      id,
+      leagueName: name,
+      url: commonPath + '/' + season + '/' + filename
+    } as LeagueItem;
   } catch (err) {
     const seasonSplitted = season.split('');
     seasonSplitted.splice(2, 0, '-');
