@@ -1,6 +1,8 @@
 # Football data scraper
+### A scraper for http://www.football-data.co.uk/ 
 
-### A scraper for http://www.football-data.co.uk/
+![npm (scoped)](https://img.shields.io/npm/v/@irsooti/football-data-scraper?style=for-the-badge)
+
 
 🤷‍♂️ What this library can do for you?
 
@@ -59,8 +61,7 @@ async function yourFunc() {
   // }];
 }
 ```
-
-Or if you want the data already parsed as json file:
+Or if you want the data already json parsed:
 
 ```js
 import {
