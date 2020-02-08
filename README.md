@@ -13,13 +13,12 @@ See the examples below:
 
 ```js
 import {
-  scrapeBySeason,
   scrapeBySeasonAndDownload,
   models
 } from '@irsooti/football-data-scraper';
 
 async function yourFunc() {
-  const data = await scrapeBySeason(2019, 2020, models.ITALY);
+  const data = await scrapeBySeasonAndDownload(2019, 2020, models.ITALY);
   console.log(data);
   //   { data:
   //        [ { id: 'I1',
@@ -40,7 +39,6 @@ Otherwise, if you want just only the link to download the file:
 ```js
 import {
   scrapeBySeason,
-  scrapeBySeasonAndDownload,
   models
 } from '@irsooti/football-data-scraper';
 
@@ -65,8 +63,7 @@ Or if you want the data already json parsed:
 
 ```js
 import {
-  scrapeBySeason,
-  scrapeBySeasonAndDownload,
+  getBySeason,
   models
 } from '@irsooti/football-data-scraper';
 
